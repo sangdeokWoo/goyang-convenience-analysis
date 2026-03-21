@@ -245,8 +245,9 @@ nav.scrolled {
 
 .hero-subtitle {
   font-size: 15px; color: var(--text-dim);
-  line-height: 1.9; max-width: 540px;
+  line-height: 1.9; max-width: 600px;
   margin: 0 auto 52px; font-weight: 300;
+  word-break: keep-all;
   animation: fadeInUp 0.8s ease 0.35s both;
 }
 
@@ -256,15 +257,14 @@ nav.scrolled {
   animation: fadeInUp 0.8s ease 0.45s both;
 }
 .hstat {
-  padding: 20px 32px 20px 0;
-  margin-right: 32px;
+  padding: 20px 36px;
   position: relative;
 }
 .hstat::after {
   content: '';
   position: absolute; right: 0; top: 50%;
   transform: translateY(-50%);
-  width: 1px; height: 40px;
+  width: 1px; height: 36px;
   background: var(--border);
 }
 .hstat:last-child::after { display: none; }
@@ -274,9 +274,10 @@ nav.scrolled {
   display: block; letter-spacing: -0.5px;
 }
 .hstat-label {
-  font-size: 10px; color: var(--muted);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 1.5px; text-transform: uppercase;
+  font-size: 11px; color: var(--muted);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
   margin-top: 6px;
   display: block;
 }
@@ -309,7 +310,7 @@ nav.scrolled {
 }
 
 .scroll-hint {
-  position: absolute; bottom: 40px; left: 60px;
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
   display: flex; align-items: center; gap: 10px;
   font-size: 10px; color: var(--muted);
   font-family: 'DM Mono', monospace;
