@@ -35,7 +35,7 @@
 
 ---
 
-## 분석 지도 (5종)
+## 분석 지도 (7종)
 
 | 지도 | 설명 |
 |------|------|
@@ -44,6 +44,8 @@
 | `goyang_satellite_map.html` | 위성사진 위 편의점 · 추천 부지 오버레이 |
 | `goyang_brand_map.html` | CU · GS25 · 세븐일레븐 · 이마트24 브랜드 세력권 시각화 |
 | `goyang_demand_map.html` | 세대수 가중 수요압력 히트맵 + 신규 입점 TOP 10 추천 |
+| `goyang_coverage_map.html` | 편의점 반경 400m 서비스 권역 + 행정동 44개 경계 오버레이 |
+| `goyang_brand_gap_map.html` | 브랜드별 공백 히트맵 (레이어 전환으로 브랜드 사각지대 분석) |
 
 ---
 
@@ -85,16 +87,27 @@
     ├── Shapely로 고양시 경계 클리핑
     └── KD-Tree로 아파트 → 최근접 편의점 매핑 → 담당 세대수 합산
 
-브랜드 세력권 분석 (신규)
+브랜드 세력권 분석
     └── 보로노이 구역 × 브랜드 색상 → 시장 점유 지형 시각화
 
-수요압력 분석 (신규)
+수요압력 분석
     ├── 세대수 ÷ √담당면적 → 수요압력 점수 계산
     ├── 히트맵 시각화
     └── K-means 클러스터링 → 신규 입점 최적 위치 TOP 10 추천
 
+서비스 권역 분석
+    ├── 편의점별 반경 400m 서비스 원 시각화
+    ├── Overpass API로 고양시 행정동 44개 경계 오버레이
+    └── 격자 기반 커버리지 비율 계산 (28.4%)
+
+브랜드별 공백 분석
+    ├── 브랜드별 최근접 거리 격자 계산
+    ├── 브랜드 히트맵 레이어 (CU / GS25 / 세븐일레븐 / 이마트24)
+    └── 1km+ 공백 비율: CU 51.6% / GS25 57.7% / 세븐일레븐 62.6% / 이마트24 69.7%
+
 시각화 · 배포
-    ├── Folium 기반 인터랙티브 지도 5종
+    ├── Folium 기반 인터랙티브 지도 7종
+    ├── Playwright로 지도 스크린샷 썸네일 자동 생성
     └── GitHub Pages 정적 배포
 ```
 
@@ -110,7 +123,9 @@
 | 머신러닝 | scikit-learn (K-means) |
 | 지오코딩 | 카카오 지도 REST API |
 | 시각화 | Folium, Leaflet.js |
-| 실행 환경 | Google Colab |
+| 스크린샷 | Playwright (Chromium) |
+| 지도 데이터 | Overpass API (OSM 행정동 경계) |
+| 실행 환경 | Google Colab / Python 3.14 (로컬) |
 | 배포 | GitHub Pages |
 
 ---
@@ -125,11 +140,24 @@ goyang-convenience-analysis/
 ├── goyang_satellite_map.html         # 위성지도 뷰
 ├── goyang_brand_map.html             # 브랜드 세력권 지도
 ├── goyang_demand_map.html            # 수요압력 + 신규 입점 추천 지도
+├── goyang_coverage_map.html          # 서비스 권역(400m) + 행정동 경계 지도
+├── goyang_brand_gap_map.html         # 브랜드별 공백 분석 지도
 ├── goyang_convenience_analysis.ipynb # 전체 분석 노트북 (Google Colab)
+├── images/                           # 지도 스크린샷 썸네일 (Playwright 생성)
+│   ├── thumb_voronoi.jpg
+│   ├── thumb_final.jpg
+│   ├── thumb_satellite.jpg
+│   ├── thumb_brand.jpg
+│   ├── thumb_demand.jpg
+│   ├── thumb_coverage.jpg
+│   └── thumb_brand_gap.jpg
 └── scripts/
     ├── run_new_maps.py               # 브랜드·수요압력 지도 일괄 생성
     ├── make_brand_map.py             # 브랜드 세력권 지도 생성
-    └── make_demand_map.py            # 수요압력 지도 생성
+    ├── make_demand_map.py            # 수요압력 지도 생성
+    ├── make_coverage_map.py          # 서비스 권역 + 행정동 경계 지도 생성
+    ├── make_brand_gap_map.py         # 브랜드별 공백 지도 생성
+    └── make_thumbnails.py            # 지도 스크린샷 썸네일 자동 생성
 ```
 
 ---
@@ -141,3 +169,5 @@ goyang-convenience-analysis/
 3. **세븐일레븐일산동구** — 단일 편의점이 4,320세대 담당. 극단적 과부하
 4. **CU vs GS25** — 30.4% vs 30.0%로 사실상 양강 구도. 세븐일레븐(23.2%)과 격차 존재
 5. **수요압력 1위 구역** — 영향 세대수 50,370세대로 신규 입점 시 최대 수요 기대
+6. **이마트24 공백 최대** — 1km 이상 공백 구역 69.7%로 4개 브랜드 중 가장 낮은 커버리지
+7. **고양시 전체 커버리지** — 편의점 400m 반경 기준 격자점의 28.4%만 커버 (71.6% 미커버)
