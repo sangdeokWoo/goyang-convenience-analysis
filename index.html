@@ -90,26 +90,39 @@ nav.scrolled {
   -webkit-backdrop-filter: blur(20px);
 }
 .nav-logo {
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  color: var(--text-dim);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.3px;
+  display: flex; align-items: center; gap: 6px;
 }
-.nav-logo span { color: var(--accent); }
+.nav-logo .logo-mark {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: -1px;
+  line-height: 1;
+}
 .nav-links {
-  display: flex; gap: 32px;
+  display: flex; gap: 8px;
 }
 .nav-links a {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
   text-decoration: none;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  transition: color 0.2s;
+  letter-spacing: -0.3px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
 }
-.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+}
 
 /* ── Hero ── */
 .hero {
@@ -117,9 +130,11 @@ nav.scrolled {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   padding: 100px 60px 80px;
   position: relative;
   overflow: hidden;
+  text-align: center;
 }
 
 /* Animated background grid */
@@ -171,10 +186,10 @@ nav.scrolled {
 @keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-30px)} }
 @keyframes orbFloat3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-20px,20px)} }
 
-.hero-content { position: relative; z-index: 1; max-width: 940px; }
+.hero-content { position: relative; z-index: 1; max-width: 860px; width: 100%; }
 
 .hero-eyebrow {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
   margin-bottom: 32px;
   animation: fadeInUp 0.8s ease both;
 }
@@ -231,12 +246,12 @@ nav.scrolled {
 .hero-subtitle {
   font-size: 15px; color: var(--text-dim);
   line-height: 1.9; max-width: 540px;
-  margin-bottom: 52px; font-weight: 300;
+  margin: 0 auto 52px; font-weight: 300;
   animation: fadeInUp 0.8s ease 0.35s both;
 }
 
 .hero-stats {
-  display: flex; gap: 0; flex-wrap: wrap;
+  display: flex; gap: 0; flex-wrap: wrap; justify-content: center;
   margin-bottom: 52px;
   animation: fadeInUp 0.8s ease 0.45s both;
 }
@@ -273,7 +288,7 @@ nav.scrolled {
 }
 
 .hero-tags {
-  display: flex; gap: 8px; flex-wrap: wrap;
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
   animation: fadeInUp 0.8s ease 0.55s both;
 }
 .htag {
@@ -769,7 +784,7 @@ footer {
 
 <!-- Navigation -->
 <nav id="main-nav">
-  <div class="nav-logo"><span>//</span> 고양시 편의점 분석</div>
+  <div class="nav-logo"><span class="logo-mark">//</span> 고양시 편의점 분석</div>
   <div style="display:flex;align-items:center;gap:24px">
     <div class="nav-links">
       <a href="#maps">지도</a>
