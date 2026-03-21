@@ -1158,7 +1158,7 @@ footer {
         </div>
         <div class="pipe-content">
           <div class="pipe-title">데이터 수집</div>
-          <div class="pipe-detail">소상공인시장진흥공단 상가업소 데이터(650,081행)에서 고양시 편의점 951개 추출. 국토교통부 공동주택 단지 목록에서 300세대 이상 345개 단지 필터링.</div>
+          <div class="pipe-detail">소상공인시장진흥공단 상가업소 데이터(650,081행)에서 고양시 편의점 <strong>921개</strong> 추출 및 브랜드 분류. 국토교통부 공동주택 단지 목록에서 300세대 이상 345개 필터링.</div>
           <div class="pipe-tags">
             <span class="pipe-tag">공공데이터포털</span>
             <span class="pipe-tag">소상공인진흥공단</span>
@@ -1174,10 +1174,11 @@ footer {
         </div>
         <div class="pipe-content">
           <div class="pipe-title">지오코딩</div>
-          <div class="pipe-detail">카카오 지도 REST API로 아파트 도로명주소 → 위경도 좌표 변환. 345개 중 325개 성공 (약 25.3만 세대 커버).</div>
+          <div class="pipe-detail">카카오 지도 REST API로 아파트 도로명주소 → 위경도 좌표 변환. 345개 중 <strong>325개 성공</strong> (약 25.3만 세대 커버). 고양시 bbox 필터로 이상 좌표 제거.</div>
           <div class="pipe-tags">
             <span class="pipe-tag">Kakao REST API</span>
             <span class="pipe-tag">requests</span>
+            <span class="pipe-tag">bbox 필터링</span>
           </div>
         </div>
       </div>
@@ -1189,10 +1190,11 @@ footer {
         </div>
         <div class="pipe-content">
           <div class="pipe-title">공백 분석</div>
-          <div class="pipe-detail">고양시 전역을 500m 격자로 분할 후 각 격자점에서 가장 가까운 편의점까지 거리 계산. 행정동별 편의점 간 평균 최근접 거리로 공백 심각도 점수화.</div>
+          <div class="pipe-detail">고양시 전역을 <strong>500m 격자</strong>로 분할 후 각 격자점에서 최근접 편의점까지 거리 계산. 행정동별 평균 최근접 거리로 공백 심각도 점수화 → TOP 10 행정동 도출.</div>
           <div class="pipe-tags">
-            <span class="pipe-tag">numpy</span>
-            <span class="pipe-tag">scipy cdist</span>
+            <span class="pipe-tag">numpy Grid</span>
+            <span class="pipe-tag">scipy cKDTree</span>
+            <span class="pipe-tag">행정동 집계</span>
           </div>
         </div>
       </div>
@@ -1203,12 +1205,63 @@ footer {
           <div class="pipe-num" style="color:var(--accent2)">04</div>
         </div>
         <div class="pipe-content">
-          <div class="pipe-title">보로노이 분석</div>
-          <div class="pipe-detail">편의점 좌표 기반 보로노이 다이어그램 생성 후 Shapely로 고양시 경계 클리핑. KD-Tree로 각 아파트 단지를 최근접 편의점에 매핑해 담당 세대수 합산.</div>
+          <div class="pipe-title">보로노이 · 브랜드 세력권 분석</div>
+          <div class="pipe-detail">편의점 좌표 기반 보로노이 다이어그램 생성 후 Shapely로 고양시 경계 클리핑. cKDTree로 아파트 단지를 최근접 편의점에 매핑해 담당 세대수 합산. 보로노이 구역에 브랜드 색상 적용해 <strong>시장 점유 지형</strong> 시각화.</div>
           <div class="pipe-tags">
             <span class="pipe-tag">scipy Voronoi</span>
             <span class="pipe-tag">cKDTree</span>
-            <span class="pipe-tag">shapely</span>
+            <span class="pipe-tag">Shapely Clip</span>
+            <span class="pipe-tag">브랜드 분류</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-icon" style="background:rgba(255,107,53,0.1)">📊</div>
+        <div style="flex-shrink:0;min-width:44px">
+          <div class="pipe-num" style="color:var(--orange)">05</div>
+        </div>
+        <div class="pipe-content">
+          <div class="pipe-title">수요압력 분석 · 신규 입점 추천</div>
+          <div class="pipe-detail">세대수 ÷ √담당면적으로 수요압력 점수 계산 후 히트맵 시각화. <strong>K-means 클러스터링</strong>으로 수요 집중 구역 TOP 10 추출 — 1위 구역 영향 세대수 50,370세대.</div>
+          <div class="pipe-tags">
+            <span class="pipe-tag">K-means (sklearn)</span>
+            <span class="pipe-tag">HeatMap</span>
+            <span class="pipe-tag">가중 점수</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-icon" style="background:rgba(255,107,53,0.1)">🗺️</div>
+        <div style="flex-shrink:0;min-width:44px">
+          <div class="pipe-num" style="color:var(--orange)">06</div>
+        </div>
+        <div class="pipe-content">
+          <div class="pipe-title">서비스 권역 · 브랜드 공백 분석</div>
+          <div class="pipe-detail">각 편의점 반경 <strong>400m 서비스 원</strong> 시각화 및 격자 기반 커버리지 산출(28.4%). Overpass API로 44개 행정동 GeoJSON 취득. 브랜드별 최근접 거리 히트맵으로 CU·GS25·세븐일레븐·이마트24 각 브랜드 사각지대 분석.</div>
+          <div class="pipe-tags">
+            <span class="pipe-tag">Buffer 400m</span>
+            <span class="pipe-tag">Overpass API</span>
+            <span class="pipe-tag">Brand HeatMap</span>
+            <span class="pipe-tag">Layer Control</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipe-step">
+        <div class="pipe-icon" style="background:rgba(16,217,160,0.1)">🌡️</div>
+        <div style="flex-shrink:0;min-width:44px">
+          <div class="pipe-num" style="color:var(--green)">07</div>
+        </div>
+        <div class="pipe-content">
+          <div class="pipe-title">행정동별 편의점 밀도 분석</div>
+          <div class="pipe-detail">Shapely <strong>Point-in-Polygon</strong>으로 921개 편의점을 44개 행정동에 배정. 편의점 수 ÷ 행정동 면적(km²)으로 공급 밀도 산출 후 Choropleth(단계구분도)로 절대적 공급 과부족 지역 시각화.</div>
+          <div class="pipe-tags">
+            <span class="pipe-tag">Choropleth</span>
+            <span class="pipe-tag">Point-in-Polygon</span>
+            <span class="pipe-tag">Shapely</span>
+            <span class="pipe-tag">밀도 지수</span>
           </div>
         </div>
       </div>
@@ -1216,14 +1269,15 @@ footer {
       <div class="pipe-step">
         <div class="pipe-icon" style="background:rgba(16,217,160,0.1)">🚀</div>
         <div style="flex-shrink:0;min-width:44px">
-          <div class="pipe-num" style="color:var(--green)">05</div>
+          <div class="pipe-num" style="color:var(--green)">08</div>
         </div>
         <div class="pipe-content">
           <div class="pipe-title">시각화 및 배포</div>
-          <div class="pipe-detail">Folium 기반 인터랙티브 지도 3종 제작. GitHub Pages로 정적 웹사이트 배포.</div>
+          <div class="pipe-detail">Folium 기반 인터랙티브 지도 <strong>8종</strong> 제작. Playwright(Chromium 헤드리스)로 각 지도 스크린샷 썸네일 자동 생성. GitHub Pages로 정적 웹사이트 배포.</div>
           <div class="pipe-tags">
             <span class="pipe-tag">Folium</span>
             <span class="pipe-tag">Leaflet.js</span>
+            <span class="pipe-tag">Playwright</span>
             <span class="pipe-tag">GitHub Pages</span>
           </div>
         </div>
@@ -1233,13 +1287,16 @@ footer {
 
     <div class="tech-row reveal">
       <span class="tech-row-label">Stack</span>
-      <span class="tech-chip"><span class="tech-dot" style="background:#3776ab"></span>Python 3.11</span>
+      <span class="tech-chip"><span class="tech-dot" style="background:#3776ab"></span>Python 3.14</span>
       <span class="tech-chip"><span class="tech-dot" style="background:#e36209"></span>Pandas</span>
       <span class="tech-chip"><span class="tech-dot" style="background:#8b5cf6"></span>Scipy</span>
       <span class="tech-chip"><span class="tech-dot" style="background:#10d9a0"></span>Shapely</span>
+      <span class="tech-chip"><span class="tech-dot" style="background:#f59e0b"></span>scikit-learn</span>
       <span class="tech-chip"><span class="tech-dot" style="background:#60a5fa"></span>Folium</span>
-      <span class="tech-chip"><span class="tech-dot" style="background:#f59e0b"></span>Kakao API</span>
-      <span class="tech-chip"><span class="tech-dot" style="background:#24292f"></span>GitHub Pages</span>
+      <span class="tech-chip"><span class="tech-dot" style="background:#fb923c"></span>Kakao API</span>
+      <span class="tech-chip"><span class="tech-dot" style="background:#a78bfa"></span>Overpass API</span>
+      <span class="tech-chip"><span class="tech-dot" style="background:#34d399"></span>Playwright</span>
+      <span class="tech-chip"><span class="tech-dot" style="background:#475569"></span>GitHub Pages</span>
     </div>
 
   </div>
@@ -1254,7 +1311,7 @@ footer {
   </div>
   <div class="footer-right">
     소상공인진흥공단 · 국토교통부 · 카카오 API<br>
-    <span style="opacity:0.5">2024 분석 프로젝트</span>
+    <span style="opacity:0.5">데이터 분석 프로젝트</span>
   </div>
 </footer>
 
