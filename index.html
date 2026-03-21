@@ -411,14 +411,6 @@ nav.scrolled {
   border-color: var(--border-hover);
   box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,194,255,0.08);
 }
-.map-card.featured {
-  grid-column: span 2;
-  flex-direction: row;
-}
-.map-card.featured:hover {
-  box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1);
-  border-color: rgba(139,92,246,0.25);
-}
 
 /* Card shimmer effect */
 .map-card::before {
@@ -435,8 +427,7 @@ nav.scrolled {
   font-size: 56px; flex-shrink: 0;
   position: relative; overflow: hidden;
 }
-.map-card:not(.featured) .map-thumb { height: 180px; }
-.map-card.featured .map-thumb { width: 300px; height: auto; font-size: 80px; min-height: 200px; }
+.map-thumb { height: 180px; }
 
 /* 실제 스크린샷 썸네일 */
 .map-thumb img {
@@ -491,8 +482,21 @@ nav.scrolled {
 }
 .map-desc {
   font-size: 13px; color: var(--text-dim);
-  line-height: 1.75; margin-bottom: 22px;
+  line-height: 1.75; margin-bottom: 14px;
   flex: 1;
+}
+.map-tags {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-bottom: 18px;
+}
+.mtag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.4px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  color: var(--muted);
 }
 .map-link {
   display: inline-flex; align-items: center; gap: 8px;
@@ -867,27 +871,24 @@ footer {
 <div class="section-bg" id="maps">
   <div class="section reveal">
     <div class="section-label">분석 지도</div>
-    <div class="section-title">7가지 시각화</div>
+    <div class="section-title">8가지 시각화</div>
     <div class="maps-grid">
 
-      <a class="map-card featured" href="goyang_voronoi_map.html">
+      <a class="map-card" href="goyang_voronoi_map.html">
         <div class="map-thumb">
           <img src="images/thumb_voronoi.jpg" alt="보로노이 세대수 분석" loading="lazy">
           <div class="map-thumb-bg purple"></div>
-          </div>
+        </div>
         <div class="map-body">
-          <span class="map-badge" style="background:rgba(139,92,246,0.12);color:#a78bfa">Featured</span>
+          <span class="map-badge" style="background:rgba(139,92,246,0.12);color:#a78bfa">공간 분할</span>
           <div class="map-title">보로노이 세대수 분석</div>
-          <div class="map-desc">
-            각 편의점의 담당 구역을 보로노이 다이어그램으로 분할하고,
-            구역 내 아파트 세대수를 색상으로 인코딩했습니다.
-            색이 진할수록 편의점 하나가 담당하는 세대수가 많은 과부하 지역입니다.
-            최대 4,320세대를 담당하는 편의점이 발견되었습니다.
+          <div class="map-desc">각 편의점의 담당 구역을 보로노이로 분할하고 구역 내 아파트 세대수를 색상으로 인코딩. 최대 4,320세대 담당 편의점 발견.</div>
+          <div class="map-tags">
+            <span class="mtag">Voronoi Diagram</span>
+            <span class="mtag">KD-Tree</span>
+            <span class="mtag">Shapely Clip</span>
           </div>
-          <span class="map-link">
-            지도 열기
-            <div class="map-link-arrow"></div>
-          </span>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
         </div>
       </a>
 
@@ -895,15 +896,17 @@ footer {
         <div class="map-thumb">
           <img src="images/thumb_final.jpg" alt="공백 지역 분석" loading="lazy">
           <div class="map-thumb-bg blue"></div>
-          </div>
+        </div>
         <div class="map-body">
           <span class="map-badge" style="background:rgba(0,194,255,0.1);color:#38bdf8">공백 분석</span>
           <div class="map-title">공백 지역 분석</div>
           <div class="map-desc">편의점 간 최근접 거리 기반으로 공백이 심각한 행정동 TOP 10을 도출했습니다.</div>
-          <span class="map-link">
-            지도 열기
-            <div class="map-link-arrow"></div>
-          </span>
+          <div class="map-tags">
+            <span class="mtag">Grid 500m</span>
+            <span class="mtag">Nearest Neighbor</span>
+            <span class="mtag">행정동 집계</span>
+          </div>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
         </div>
       </a>
 
@@ -911,15 +914,17 @@ footer {
         <div class="map-thumb">
           <img src="images/thumb_satellite.jpg" alt="위성지도 뷰" loading="lazy">
           <div class="map-thumb-bg green"></div>
-          </div>
+        </div>
         <div class="map-body">
           <span class="map-badge" style="background:rgba(16,217,160,0.1);color:#34d399">위성지도</span>
           <div class="map-title">위성지도 뷰</div>
           <div class="map-desc">위성사진 위에 편의점과 추천 부지를 오버레이해 실제 지형을 확인할 수 있습니다.</div>
-          <span class="map-link">
-            지도 열기
-            <div class="map-link-arrow"></div>
-          </span>
+          <div class="map-tags">
+            <span class="mtag">Satellite Tiles</span>
+            <span class="mtag">Kakao Geocoding</span>
+            <span class="mtag">Marker Cluster</span>
+          </div>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
         </div>
       </a>
 
@@ -927,15 +932,17 @@ footer {
         <div class="map-thumb">
           <img src="images/thumb_brand.jpg" alt="브랜드 세력권" loading="lazy">
           <div class="map-thumb-bg orange"></div>
-          </div>
+        </div>
         <div class="map-body">
           <span class="map-badge" style="background:rgba(255,107,53,0.12);color:#fb923c">브랜드 분석</span>
           <div class="map-title">브랜드 세력권 지도</div>
-          <div class="map-desc">보로노이 구역을 CU · GS25 · 세븐일레븐 · 이마트24 브랜드 색으로 채워 각 브랜드가 지배하는 지역을 한눈에 파악합니다. 브랜드별 시장 점유율도 함께 표시합니다.</div>
-          <span class="map-link">
-            지도 열기
-            <div class="map-link-arrow"></div>
-          </span>
+          <div class="map-desc">보로노이 구역을 CU · GS25 · 세븐일레븐 · 이마트24 브랜드 색으로 채워 시장 점유 지형을 시각화합니다.</div>
+          <div class="map-tags">
+            <span class="mtag">Voronoi</span>
+            <span class="mtag">브랜드 분류</span>
+            <span class="mtag">점유율 계산</span>
+          </div>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
         </div>
       </a>
 
@@ -943,15 +950,17 @@ footer {
         <div class="map-thumb">
           <img src="images/thumb_demand.jpg" alt="수요압력 지도" loading="lazy">
           <div class="map-thumb-bg teal"></div>
-          </div>
+        </div>
         <div class="map-body">
           <span class="map-badge" style="background:rgba(56,189,248,0.1);color:#38bdf8">수요 분석</span>
           <div class="map-title">세대수 가중 수요압력 지도</div>
-          <div class="map-desc">세대수 ÷ 편의점까지 거리로 수요압력 점수를 계산해 히트맵으로 표시합니다. K-means 클러스터링으로 신규 입점 최적 위치 TOP 10을 추천합니다.</div>
-          <span class="map-link">
-            지도 열기
-            <div class="map-link-arrow"></div>
-          </span>
+          <div class="map-desc">세대수 ÷ 편의점 거리로 수요압력 점수를 계산. K-means 클러스터링으로 신규 입점 최적 위치 TOP 10 추천.</div>
+          <div class="map-tags">
+            <span class="mtag">K-means Clustering</span>
+            <span class="mtag">HeatMap</span>
+            <span class="mtag">가중 점수</span>
+          </div>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
         </div>
       </a>
 
@@ -959,15 +968,17 @@ footer {
         <div class="map-thumb">
           <img src="images/thumb_coverage.jpg" alt="서비스 권역 지도" loading="lazy">
           <div class="map-thumb-bg green"></div>
-          </div>
+        </div>
         <div class="map-body">
           <span class="map-badge" style="background:rgba(16,217,160,0.1);color:#10d9a0">커버리지</span>
           <div class="map-title">서비스 권역 + 행정동 경계</div>
-          <div class="map-desc">각 편의점 반경 400m 서비스 권역을 시각화하고, 44개 행정동 경계와 동 이름을 오버레이합니다. 커버리지 공백 지역을 직관적으로 파악할 수 있습니다.</div>
-          <span class="map-link">
-            지도 열기
-            <div class="map-link-arrow"></div>
-          </span>
+          <div class="map-desc">각 편의점 반경 400m 서비스 권역과 44개 행정동 경계를 오버레이. 격자 기반 커버리지 28.4% 산출.</div>
+          <div class="map-tags">
+            <span class="mtag">Buffer 400m</span>
+            <span class="mtag">Overpass API</span>
+            <span class="mtag">커버리지 계산</span>
+          </div>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
         </div>
       </a>
 
@@ -975,15 +986,36 @@ footer {
         <div class="map-thumb">
           <img src="images/thumb_brand_gap.jpg" alt="브랜드별 공백 분석" loading="lazy">
           <div class="map-thumb-bg blue"></div>
-          </div>
+        </div>
         <div class="map-body">
           <span class="map-badge" style="background:rgba(0,194,255,0.1);color:#38bdf8">브랜드 공백</span>
           <div class="map-title">브랜드별 공백 분석</div>
-          <div class="map-desc">CU · GS25 · 세븐일레븐 · 이마트24 각 브랜드까지의 거리를 히트맵으로 표시합니다. 레이어 전환으로 "GS25 사각지대", "이마트24 미진출 구역" 등을 확인합니다.</div>
-          <span class="map-link">
-            지도 열기
-            <div class="map-link-arrow"></div>
-          </span>
+          <div class="map-desc">각 브랜드까지의 거리를 히트맵으로 표시. 레이어 전환으로 "GS25 사각지대", "이마트24 미진출 구역" 확인.</div>
+          <div class="map-tags">
+            <span class="mtag">Brand HeatMap</span>
+            <span class="mtag">KD-Tree 거리</span>
+            <span class="mtag">Layer Control</span>
+          </div>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
+        </div>
+      </a>
+
+      <a class="map-card" href="goyang_dong_density_map.html">
+        <div class="map-thumb">
+          <img src="images/thumb_dong_density.jpg" alt="행정동별 편의점 밀도" loading="lazy"
+               onerror="this.style.display='none'">
+          <div class="map-thumb-bg purple" style="opacity:0.35"></div>
+        </div>
+        <div class="map-body">
+          <span class="map-badge" style="background:rgba(139,92,246,0.12);color:#a78bfa">밀도 분석</span>
+          <div class="map-title">행정동별 편의점 밀도</div>
+          <div class="map-desc">44개 행정동별 편의점 수를 면적(km²)으로 나눈 공급 밀도를 코로플레스로 표현. 절대적 공급 과부족 지역을 파악합니다.</div>
+          <div class="map-tags">
+            <span class="mtag">Choropleth</span>
+            <span class="mtag">Point-in-Polygon</span>
+            <span class="mtag">밀도 지수</span>
+          </div>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
         </div>
       </a>
 
