@@ -21,6 +21,7 @@ MAPS = [
     ('goyang_demand_map.html',    'thumb_demand.jpg'),
     ('goyang_coverage_map.html',  'thumb_coverage.jpg'),
     ('goyang_brand_gap_map.html', 'thumb_brand_gap.jpg'),
+    ('goyang_dong_density_map.html', 'thumb_dong_density.jpg'),
 ]
 
 # 로컬 HTTP 서버 시작

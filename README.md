@@ -35,7 +35,7 @@
 
 ---
 
-## 분석 지도 (7종)
+## 분석 지도 (8종)
 
 | 지도 | 설명 |
 |------|------|
@@ -46,6 +46,7 @@
 | `goyang_demand_map.html` | 세대수 가중 수요압력 히트맵 + 신규 입점 TOP 10 추천 |
 | `goyang_coverage_map.html` | 편의점 반경 400m 서비스 권역 + 행정동 44개 경계 오버레이 |
 | `goyang_brand_gap_map.html` | 브랜드별 공백 히트맵 (레이어 전환으로 브랜드 사각지대 분석) |
+| `goyang_dong_density_map.html` | 행정동별 편의점 공급 밀도 코로플레스 (Choropleth + Point-in-Polygon) |
 
 ---
 
