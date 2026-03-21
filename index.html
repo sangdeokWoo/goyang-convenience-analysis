@@ -459,6 +459,8 @@ nav.scrolled {
   grid-template-columns: repeat(3,1fr);
   gap: 14px;
 }
+.insights-grid .insight-card:nth-child(4) { grid-column: 1 / 2; }
+.insights-grid .insight-card:nth-child(5) { grid-column: 2 / 3; }
 .insight-card {
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -656,20 +658,59 @@ footer {
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  nav { padding: 0 24px; }
+  nav { padding: 0 20px; }
   .nav-links { display: none; }
-  .hero { padding: 80px 24px 60px; }
-  .section { padding: 64px 24px; }
+
+  .hero { padding: 80px 20px 56px; }
+  .hero-title { font-size: clamp(52px, 14vw, 80px); }
+  .hero-subtitle { font-size: 14px; margin-bottom: 36px; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .hstat {
+    padding: 14px 16px 14px 0;
+    margin-right: 0;
+  }
+  .hstat::after { display: none; }
+  .hstat-num { font-size: 40px; }
+  .scroll-hint { left: 20px; }
+
+  .section { padding: 56px 20px; }
+  .section-title { font-size: 40px; }
+
   .maps-grid { grid-template-columns: 1fr; }
   .map-card.featured { flex-direction: column; }
-  .map-card.featured .map-thumb { width: 100%; height: 180px; }
-  .insights-grid { grid-template-columns: 1fr; }
-  footer { grid-template-columns: 1fr; padding: 28px 24px; }
-  .footer-center { flex-direction: column; gap: 8px; }
+  .map-card.featured .map-thumb { width: 100%; height: 160px; }
+  .map-card:not(.featured) .map-thumb { height: 140px; }
+
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+  .insights-grid .insight-card:nth-child(4),
+  .insights-grid .insight-card:nth-child(5) {
+    grid-column: auto;
+  }
+  .insight-num { font-size: 48px; }
+
+  .pipe-step { padding: 20px; gap: 16px; }
+  .pipe-icon { display: none; }
+
+  .tech-row { padding: 16px; }
+
+  footer {
+    grid-template-columns: 1fr;
+    padding: 24px 20px;
+    gap: 16px;
+  }
+  .footer-center {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
   .footer-right { text-align: left; }
-  .hero-stats { gap: 24px; }
-  .hstat { padding: 16px 24px 16px 0; margin-right: 24px; }
-  .scroll-hint { left: 24px; }
 }
 </style>
 </head>
@@ -896,6 +937,34 @@ footer {
           <div class="insight-bar" style="width:78%;background:var(--green);"></div>
         </div>
         <span class="insight-rank" style="color:var(--green)">분산도 최고</span>
+      </div>
+    </div>
+
+    <div class="insight-card reveal reveal-delay-1" style="color:#fb923c">
+      <div class="insight-num" style="color:#fb923c">30.4%</div>
+      <div class="insight-label">
+        <strong>CU</strong>의 고양시 시장 점유율. GS25(30.0%)와 사실상 동률로
+        양강 구도를 형성하며 세븐일레븐(23.2%)과 격차를 벌리고 있습니다.
+      </div>
+      <div class="insight-footer">
+        <div class="insight-bar-wrap">
+          <div class="insight-bar" style="width:100%;background:#fb923c;"></div>
+        </div>
+        <span class="insight-rank" style="color:#fb923c">브랜드 1위</span>
+      </div>
+    </div>
+
+    <div class="insight-card reveal reveal-delay-2" style="color:#38bdf8">
+      <div class="insight-num" style="color:#38bdf8">50,370</div>
+      <div class="insight-label">
+        수요압력 분석 1위 클러스터의 <strong>영향 세대수</strong>.
+        세대수 ÷ 담당면적 가중 점수 기준 최우선 신규 입점 추천 구역입니다.
+      </div>
+      <div class="insight-footer">
+        <div class="insight-bar-wrap">
+          <div class="insight-bar" style="width:100%;background:#38bdf8;"></div>
+        </div>
+        <span class="insight-rank" style="color:#38bdf8">수요압력 1위</span>
       </div>
     </div>
 
