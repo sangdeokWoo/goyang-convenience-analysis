@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>고양시 편의점 입지 분석</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: system-ui, sans-serif; background:#f4f6f8; color:#1a1f2e; }
+  header {
+    background:white; border-bottom:1px solid #e5e7eb;
+    padding:20px 40px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo { display:flex; align-items:center; gap:10px; }
+  .dot { width:10px; height:10px; border-radius:50%; background:#00a0e9;
+         animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  h1 { font-size:18px; font-weight:600; }
+  .sub { font-size:12px; color:#6b7280; margin-top:2px; }
+  .tags { display:flex; gap:6px; }
+  .tag { font-size:11px; padding:3px 10px; border-radius:20px;
+         border:1px solid #e5e7eb; color:#6b7280; }
+  main { max-width:1100px; margin:0 auto; padding:40px 24px; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:36px; }
+  .stat { background:white; border-radius:12px; padding:16px 20px;
+          border:1px solid #e5e7eb; }
+  .stat-label { font-size:12px; color:#6b7280; margin-bottom:4px; }
+  .stat-value { font-size:24px; font-weight:600; }
+  .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .card {
+    background:white; border-radius:14px; border:1px solid #e5e7eb;
+    overflow:hidden; text-decoration:none; color:inherit;
+    transition:transform 0.15s, box-shadow 0.15s;
+  }
+  .card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
+  .card-thumb {
+    height:180px; display:flex; align-items:center; justify-content:center;
+    font-size:48px;
+  }
+  .card-body { padding:16px 20px; }
+  .card-title { font-size:15px; font-weight:600; margin-bottom:6px; }
+  .card-desc { font-size:13px; color:#6b7280; line-height:1.6; margin-bottom:12px; }
+  .card-badge { display:inline-block; font-size:11px; padding:2px 8px;
+                border-radius:10px; }
+  footer { text-align:center; padding:32px; font-size:12px; color:#9ca3af; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="dot"></div>
+    <div>
+      <div style="font-size:16px;font-weight:600">고양시 편의점 입지 분석</div>
+      <div class="sub">소상공인 상가 데이터 · 공동주택 세대수 · K-means · 보로노이</div>
+    </div>
+  </div>
+  <div class="tags">
+    <span class="tag">Python</span>
+    <span class="tag">Folium</span>
+    <span class="tag">Kakao API</span>
+    <span class="tag">Scipy</span>
+  </div>
+</header>
+
+<main>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">분석 대상 편의점</div>
+      <div class="stat-value" style="color:#00a0e9">951<span style="font-size:14px;font-weight:400;color:#6b7280">개</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">아파트 단지</div>
+      <div class="stat-value" style="color:#7c3aed">325<span style="font-size:14px;font-weight:400;color:#6b7280">개</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">커버 세대수</div>
+      <div class="stat-value" style="color:#059669">25.3<span style="font-size:14px;font-weight:400;color:#6b7280">만</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">공백 심각 동네</div>
+      <div class="stat-value" style="color:#dc2626">10<span style="font-size:14px;font-weight:400;color:#6b7280">곳</span></div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <a class="card" href="goyang_final_map.html">
+      <div class="card-thumb" style="background:#eff6ff">🗺️</div>
+      <div class="card-body">
+        <div class="card-title">공백 지역 분석</div>
+        <div class="card-desc">편의점 간 거리 기반으로 공백이 심각한 행정동 TOP 10을 도출한 지도</div>
+        <span class="card-badge" style="background:#eff6ff;color:#1d4ed8">공백 분석</span>
+      </div>
+    </a>
+    <a class="card" href="goyang_satellite_map.html">
+      <div class="card-thumb" style="background:#f0fdf4">🛰️</div>
+      <div class="card-body">
+        <div class="card-title">위성지도 뷰</div>
+        <div class="card-desc">위성사진 위에 편의점과 추천 부지를 오버레이한 지도. 실제 지형 확인 가능</div>
+        <span class="card-badge" style="background:#f0fdf4;color:#166534">위성지도</span>
+      </div>
+    </a>
+    <a class="card" href="goyang_voronoi_map.html">
+      <div class="card-thumb" style="background:#fdf4ff">📐</div>
+      <div class="card-body">
+        <div class="card-title">보로노이 세대수 분석</div>
+        <div class="card-desc">각 편의점의 담당 구역을 보로노이로 나눠 세대수 부하를 시각화한 지도</div>
+        <span class="card-badge" style="background:#fdf4ff;color:#7e22ce">보로노이</span>
+      </div>
+    </a>
+  </div>
+</main>
+
+<footer>고양시 편의점 입지 분석 · 데이터 출처: 소상공인시장진흥공단, 국토교통부, 카카오 지도 API</footer>
+
+</body>
+</html>
