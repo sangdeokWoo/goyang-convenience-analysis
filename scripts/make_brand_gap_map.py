@@ -66,19 +66,19 @@ for brand in BRANDS:
 
 # ── 3. 히트맵 데이터 준비 ─────────────────────────────────────────────────────
 # 거리를 0~1 가중치로 변환 (멀수록 1에 가까움 → 히트맵에서 뜨겁게)
-CLIP_DIST = 1200  # 1.2km 이상은 모두 최대 강도
+CLIP_DIST = 2500  # 2.5km까지 선형 스케일 → 거리 변화 충분히 표현
 
 def dist_to_heat(dists, clip=CLIP_DIST):
-    """거리 → 히트맵 가중치 (멀수록 높음)"""
+    """거리 → 히트맵 가중치 (멀수록 높음, 제곱근으로 중간 영역 강조)"""
     w = np.clip(dists / clip, 0, 1)
-    return w
+    return np.sqrt(w)  # 제곱근 스케일: 가까운 쪽 변화를 더 뚜렷하게
 
 heat_by_brand = {}
 for brand, dists in brand_data.items():
     w = dist_to_heat(dists)
     heat_by_brand[brand] = [
         [float(grid[i, 0]), float(grid[i, 1]), float(w[i])]
-        for i in range(len(grid)) if w[i] > 0.05
+        for i in range(len(grid)) if w[i] > 0.08
     ]
 
 # ── 4. 지도 생성 ─────────────────────────────────────────────────────────────
@@ -86,12 +86,12 @@ print("\n지도 생성 중...")
 
 m = folium.Map(location=[37.655, 126.835], zoom_start=12, tiles='CartoDB dark_matter')
 
-# 브랜드별 히트맵 레이어
+# 브랜드별 히트맵 레이어 — 흰색 없이 채도 높은 색으로만 구성
 GRADIENTS = {
-    'CU':        {0.0: '#0f172a', 0.4: '#1d4ed8', 0.7: '#60a5fa', 1.0: '#ffffff'},
-    'GS25':      {0.0: '#0f172a', 0.4: '#15803d', 0.7: '#4ade80', 1.0: '#ffffff'},
-    '세븐일레븐': {0.0: '#0f172a', 0.4: '#b91c1c', 0.7: '#f87171', 1.0: '#ffffff'},
-    '이마트24':  {0.0: '#0f172a', 0.4: '#b45309', 0.7: '#fbbf24', 1.0: '#ffffff'},
+    'CU':        {0.0: 'rgba(0,0,0,0)', 0.25: '#1e3a8a', 0.55: '#2563eb', 0.8: '#60a5fa', 1.0: '#bfdbfe'},
+    'GS25':      {0.0: 'rgba(0,0,0,0)', 0.25: '#14532d', 0.55: '#16a34a', 0.8: '#4ade80', 1.0: '#bbf7d0'},
+    '세븐일레븐': {0.0: 'rgba(0,0,0,0)', 0.25: '#7f1d1d', 0.55: '#dc2626', 0.8: '#f87171', 1.0: '#fecaca'},
+    '이마트24':  {0.0: 'rgba(0,0,0,0)', 0.25: '#78350f', 0.55: '#d97706', 0.8: '#fbbf24', 1.0: '#fde68a'},
 }
 
 for brand, heat_data in heat_by_brand.items():
@@ -99,8 +99,8 @@ for brand, heat_data in heat_by_brand.items():
     HeatMap(
         heat_data,
         name=f'{brand} 공백 강도',
-        radius=28, blur=22, min_opacity=0.1,
-        gradient=GRADIENTS.get(brand, {0:'#000', 1:'#fff'}),
+        radius=18, blur=14, min_opacity=0.05, max_val=1.0,
+        gradient=GRADIENTS.get(brand, {0:'rgba(0,0,0,0)', 1:'#fff'}),
         show=(brand == 'CU'),  # CU만 기본 표시
     ).add_to(m)
 
