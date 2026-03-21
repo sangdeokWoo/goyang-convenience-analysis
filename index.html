@@ -346,23 +346,27 @@ nav.scrolled {
 /* ── Section ── */
 .section { padding: 100px 60px; max-width: 1240px; margin: 0 auto; }
 .section-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px; color: var(--accent);
-  letter-spacing: 3px; text-transform: uppercase;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 11px; color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.5px;
   margin-bottom: 12px;
   display: flex; align-items: center; gap: 10px;
+  word-break: keep-all;
 }
 .section-label::before {
   content: '';
   width: 24px; height: 1px;
   background: var(--accent);
-  display: inline-block;
+  display: inline-block; flex-shrink: 0;
 }
 .section-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 52px; line-height: 1;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 52px; line-height: 1.05;
+  font-weight: 800;
   margin-bottom: 48px;
-  letter-spacing: 0.5px;
+  letter-spacing: -1.5px;
+  word-break: keep-all;
 }
 
 /* ── Divider Section ── */
@@ -464,10 +468,11 @@ nav.scrolled {
 }
 .map-badge {
   display: inline-flex; align-items: center; gap: 5px;
-  font-size: 9px; padding: 3px 10px;
+  font-size: 10px; padding: 3px 10px;
   border-radius: 4px;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 1px; text-transform: uppercase;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.2px;
   margin-bottom: 14px; width: fit-content;
 }
 .map-badge::before {
@@ -500,9 +505,9 @@ nav.scrolled {
 }
 .map-link {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; font-family: 'DM Mono', monospace;
-  color: var(--accent); letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-size: 12px; font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  color: var(--accent); letter-spacing: -0.2px;
   transition: gap 0.2s;
 }
 .map-link-arrow {
@@ -554,15 +559,18 @@ nav.scrolled {
 .insight-card:hover::before { opacity: 0.3; }
 
 .insight-num {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
   font-size: 60px; line-height: 1;
-  letter-spacing: -0.5px;
+  font-weight: 800;
+  letter-spacing: -2px;
 }
 .insight-num-ctx {
   font-size: 11px; color: var(--muted);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.3px;
-  margin-top: 4px; margin-bottom: 16px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+  margin-top: 6px; margin-bottom: 16px;
+  word-break: keep-all;
 }
 .insight-label {
   font-size: 13px; color: var(--text-dim);
@@ -577,9 +585,11 @@ nav.scrolled {
 }
 .insight-compare {
   font-size: 11px; color: var(--muted);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.2px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.2px;
   margin-bottom: 10px;
+  word-break: keep-all;
 }
 .insight-compare em {
   font-style: normal; font-weight: 600;
@@ -599,10 +609,9 @@ nav.scrolled {
 }
 @keyframes barGrow { from{width:0} }
 .insight-badge {
-  font-size: 10px; font-family: 'DM Mono', monospace;
-  letter-spacing: 0.5px; white-space: nowrap;
+  font-size: 11px; font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 600; letter-spacing: -0.2px; white-space: nowrap;
   padding: 4px 10px; border-radius: 6px;
-  font-weight: 500;
 }
 
 /* ── Pipeline ── */
@@ -641,13 +650,14 @@ nav.scrolled {
 }
 .pipe-tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
 .pipe-tag {
-  font-size: 10px; padding: 3px 9px;
+  font-size: 11px; padding: 3px 10px;
   border-radius: 4px;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
   color: var(--text-dim);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.3px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.2px;
 }
 
 .pipe-icon {
@@ -707,14 +717,15 @@ footer {
   gap: 24px;
 }
 .footer-brand {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 20px;
-  letter-spacing: 1px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 16px; font-weight: 700;
+  letter-spacing: -0.5px;
 }
 .footer-brand span { color: var(--accent); }
 .footer-center {
   display: flex; gap: 24px;
-  font-size: 11px; font-family: 'DM Mono', monospace;
+  font-size: 12px; font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500; letter-spacing: -0.2px;
   color: var(--muted);
 }
 .footer-center a {
@@ -726,8 +737,9 @@ footer {
 .footer-right {
   text-align: right;
   font-size: 11px; color: var(--muted);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.5px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400; letter-spacing: -0.2px;
+  line-height: 1.7;
 }
 
 /* ── Reveal Animations ── */
