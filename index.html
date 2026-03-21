@@ -23,6 +23,32 @@
   --orange: #ff6b35;
   --accent-glow: rgba(0,194,255,0.15);
   --accent2-glow: rgba(139,92,246,0.15);
+  --nav-scrolled-bg: rgba(7,9,13,0.88);
+  --hero-grid-color: rgba(0,194,255,0.03);
+  --section-bg: #0e1117;
+  --transition-theme: background 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ── Light Mode ── */
+[data-theme="light"] {
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --surface2: #f8fafc;
+  --surface3: #e2e8f0;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,130,210,0.35);
+  --text: #0f172a;
+  --text-dim: #475569;
+  --muted: #94a3b8;
+  --accent: #0284c7;
+  --accent2: #7c3aed;
+  --green: #059669;
+  --orange: #ea580c;
+  --accent-glow: rgba(2,132,199,0.12);
+  --accent2-glow: rgba(124,58,237,0.12);
+  --nav-scrolled-bg: rgba(241,245,249,0.92);
+  --hero-grid-color: rgba(0,100,200,0.05);
+  --section-bg: #ffffff;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior: smooth; }
@@ -58,7 +84,7 @@ nav {
   transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
 }
 nav.scrolled {
-  background: rgba(7,9,13,0.85);
+  background: var(--nav-scrolled-bg);
   border-color: var(--border);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -100,8 +126,8 @@ nav.scrolled {
 .hero-grid {
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(rgba(0,194,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,194,255,0.03) 1px, transparent 1px);
+    linear-gradient(var(--hero-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hero-grid-color) 1px, transparent 1px);
   background-size: 64px 64px;
   animation: gridMove 25s linear infinite;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
@@ -325,9 +351,23 @@ nav.scrolled {
 
 /* ── Divider Section ── */
 .section-bg {
-  background: var(--surface);
+  background: var(--section-bg);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+}
+
+/* ── Theme Toggle ── */
+.theme-toggle {
+  background: none; border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; transition: border-color 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--accent-glow);
 }
 
 /* ── Map Cards ── */
@@ -380,14 +420,28 @@ nav.scrolled {
   position: relative; overflow: hidden;
 }
 .map-card:not(.featured) .map-thumb { height: 180px; }
-.map-card.featured .map-thumb { width: 300px; height: auto; font-size: 80px; }
+.map-card.featured .map-thumb { width: 300px; height: auto; font-size: 80px; min-height: 200px; }
+
+/* 실제 스크린샷 썸네일 */
+.map-thumb img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center top;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), filter 0.3s;
+  filter: brightness(0.75) saturate(1.1);
+}
+.map-card:hover .map-thumb img {
+  transform: scale(1.05);
+  filter: brightness(0.9) saturate(1.2);
+}
 
 .map-thumb-bg {
   position: absolute; inset: 0;
   opacity: 0;
   transition: opacity 0.4s;
+  z-index: 1;
 }
-.map-card:hover .map-thumb-bg { opacity: 0.2; }
+.map-card:hover .map-thumb-bg { opacity: 0.15; }
 .map-thumb-bg.blue { background: radial-gradient(circle at 50% 60%, #00c2ff, transparent 65%); }
 .map-thumb-bg.purple { background: radial-gradient(circle at 50% 60%, #8b5cf6, transparent 65%); }
 .map-thumb-bg.green { background: radial-gradient(circle at 50% 60%, #10d9a0, transparent 65%); }
@@ -395,9 +449,9 @@ nav.scrolled {
 .map-thumb-bg.teal { background: radial-gradient(circle at 50% 60%, #38bdf8, transparent 65%); }
 
 .map-thumb-icon {
-  position: relative; z-index: 1;
+  position: relative; z-index: 2;
   transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
 }
 .map-card:hover .map-thumb-icon { transform: scale(1.12) translateY(-4px); }
 
@@ -722,10 +776,13 @@ footer {
 <!-- Navigation -->
 <nav id="main-nav">
   <div class="nav-logo"><span>//</span> 고양시 편의점 분석</div>
-  <div class="nav-links">
-    <a href="#maps">지도</a>
-    <a href="#insights">인사이트</a>
-    <a href="#pipeline">방법론</a>
+  <div style="display:flex;align-items:center;gap:24px">
+    <div class="nav-links">
+      <a href="#maps">지도</a>
+      <a href="#insights">인사이트</a>
+      <a href="#pipeline">방법론</a>
+    </div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">🌙</button>
   </div>
 </nav>
 
@@ -800,11 +857,12 @@ footer {
 <div class="section-bg" id="maps">
   <div class="section reveal">
     <div class="section-label">분석 지도</div>
-    <div class="section-title">5가지 시각화</div>
+    <div class="section-title">7가지 시각화</div>
     <div class="maps-grid">
 
       <a class="map-card featured" href="goyang_voronoi_map.html">
         <div class="map-thumb">
+          <img src="images/thumb_voronoi.jpg" alt="보로노이 세대수 분석" loading="lazy">
           <div class="map-thumb-bg purple"></div>
           <span class="map-thumb-icon">📐</span>
         </div>
@@ -826,6 +884,7 @@ footer {
 
       <a class="map-card" href="goyang_final_map.html">
         <div class="map-thumb">
+          <img src="images/thumb_final.jpg" alt="공백 지역 분석" loading="lazy">
           <div class="map-thumb-bg blue"></div>
           <span class="map-thumb-icon">🗺️</span>
         </div>
@@ -842,6 +901,7 @@ footer {
 
       <a class="map-card" href="goyang_satellite_map.html">
         <div class="map-thumb">
+          <img src="images/thumb_satellite.jpg" alt="위성지도 뷰" loading="lazy">
           <div class="map-thumb-bg green"></div>
           <span class="map-thumb-icon">🛰️</span>
         </div>
@@ -858,6 +918,7 @@ footer {
 
       <a class="map-card" href="goyang_brand_map.html">
         <div class="map-thumb">
+          <img src="images/thumb_brand.jpg" alt="브랜드 세력권" loading="lazy">
           <div class="map-thumb-bg orange"></div>
           <span class="map-thumb-icon">🏪</span>
         </div>
@@ -874,6 +935,7 @@ footer {
 
       <a class="map-card" href="goyang_demand_map.html">
         <div class="map-thumb">
+          <img src="images/thumb_demand.jpg" alt="수요압력 지도" loading="lazy">
           <div class="map-thumb-bg teal"></div>
           <span class="map-thumb-icon">🔥</span>
         </div>
@@ -881,6 +943,40 @@ footer {
           <span class="map-badge" style="background:rgba(56,189,248,0.1);color:#38bdf8">수요 분석</span>
           <div class="map-title">세대수 가중 수요압력 지도</div>
           <div class="map-desc">세대수 ÷ 편의점까지 거리로 수요압력 점수를 계산해 히트맵으로 표시합니다. K-means 클러스터링으로 신규 입점 최적 위치 TOP 10을 추천합니다.</div>
+          <span class="map-link">
+            지도 열기
+            <div class="map-link-arrow"></div>
+          </span>
+        </div>
+      </a>
+
+      <a class="map-card" href="goyang_coverage_map.html">
+        <div class="map-thumb">
+          <img src="images/thumb_coverage.jpg" alt="서비스 권역 지도" loading="lazy">
+          <div class="map-thumb-bg green"></div>
+          <span class="map-thumb-icon">📍</span>
+        </div>
+        <div class="map-body">
+          <span class="map-badge" style="background:rgba(16,217,160,0.1);color:#10d9a0">커버리지</span>
+          <div class="map-title">서비스 권역 + 행정동 경계</div>
+          <div class="map-desc">각 편의점 반경 400m 서비스 권역을 시각화하고, 44개 행정동 경계와 동 이름을 오버레이합니다. 커버리지 공백 지역을 직관적으로 파악할 수 있습니다.</div>
+          <span class="map-link">
+            지도 열기
+            <div class="map-link-arrow"></div>
+          </span>
+        </div>
+      </a>
+
+      <a class="map-card" href="goyang_brand_gap_map.html">
+        <div class="map-thumb">
+          <img src="images/thumb_brand_gap.jpg" alt="브랜드별 공백 분석" loading="lazy">
+          <div class="map-thumb-bg blue"></div>
+          <span class="map-thumb-icon">🎯</span>
+        </div>
+        <div class="map-body">
+          <span class="map-badge" style="background:rgba(0,194,255,0.1);color:#38bdf8">브랜드 공백</span>
+          <div class="map-title">브랜드별 공백 분석</div>
+          <div class="map-desc">CU · GS25 · 세븐일레븐 · 이마트24 각 브랜드까지의 거리를 히트맵으로 표시합니다. 레이어 전환으로 "GS25 사각지대", "이마트24 미진출 구역" 등을 확인합니다.</div>
           <span class="map-link">
             지도 열기
             <div class="map-link-arrow"></div>
@@ -1097,6 +1193,31 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* Reveal on scroll */
+/* ── Dark / Light Mode ── */
+(function() {
+  const saved = localStorage.getItem('theme');
+  const prefer = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  const theme = saved || prefer;
+  document.documentElement.dataset.theme = theme;
+})();
+
+function toggleTheme() {
+  const html  = document.documentElement;
+  const isDark = html.dataset.theme !== 'light';
+  const next  = isDark ? 'light' : 'dark';
+  html.dataset.theme = next;
+  localStorage.setItem('theme', next);
+  document.getElementById('theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
+}
+
+document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+
+// 초기 아이콘 설정
+document.addEventListener('DOMContentLoaded', () => {
+  const t = document.documentElement.dataset.theme;
+  document.getElementById('theme-toggle').textContent = t === 'dark' ? '🌙' : '☀️';
+});
+
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
