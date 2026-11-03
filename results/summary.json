@@ -1,0 +1,22 @@
+{
+  "stores": 921,
+  "apartments": 325,
+  "apt_units": 252967,
+  "radius_m": 400,
+  "city_km2": 266.1,
+  "analysis_area_km2": 216.7,
+  "apartments_in_scope": 325,
+  "apt_units_in_scope": 252967,
+  "residential_km2": 15.0,
+  "residential_outside_data_km2": 0.8,
+  "coverage_old_method_pct": 28.4,
+  "coverage_city_area_pct": 47.2,
+  "coverage_residential_pct": 97.9,
+  "coverage_apt_units_pct": 98.9,
+  "res_mean_dist_m": 150,
+  "stores_per_1k_units_median": 1.92,
+  "short_units": 45865,
+  "uncovered_res_km2": 0.31,
+  "after_sites_short_units": 42820,
+  "after_sites_uncovered_res_km2": 0.0
+}

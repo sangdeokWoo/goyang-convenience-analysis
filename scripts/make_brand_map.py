@@ -60,7 +60,7 @@ vor = Voronoi(all_pts)
 m = folium.Map(
     location=[37.655, 126.835],
     zoom_start=12,
-    tiles='CartoDB dark_matter',
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', attr='Tiles &copy; Esri',
 )
 
 # ── 보로노이 셀 그리기 ─────────────────────────────────────────────────────────

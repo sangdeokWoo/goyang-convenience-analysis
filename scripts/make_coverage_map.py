@@ -1,78 +1,29 @@
 """
 분석: 서비스 권역(400m) + 행정동 경계 오버레이 지도
 - 각 편의점 반경 400m 서비스 권역 시각화
-- Overpass API로 고양시 행정동 경계 + 동 이름 표시
+- 행정동 경계: data/goyang_dong.geojson (scripts/fetch_osm.py) + 동 이름 표시
 - 커버리지 공백 지역 직관적 파악 가능
 """
 
-import re
 import json
-import requests
-import numpy as np
-import folium
-from folium.plugins import FeatureGroupSubGroup
 from collections import Counter
+from pathlib import Path
 
-BASE = r'C:\Users\woosd\OneDrive\바탕 화면\작업\goyang-convenience-analysis'
+import folium
+import pandas as pd
+from shapely.geometry import shape
 
-# ── 1. 편의점 데이터 파싱 (satellite_map.html) ─────────────────────────────────
-print("편의점 데이터 파싱 중...")
-sat_html = open(f'{BASE}/goyang_satellite_map.html', encoding='utf-8').read()
+ROOT = Path(__file__).resolve().parent.parent
+DATA, RESULTS = ROOT / 'data', ROOT / 'results'
 
-coord_pat   = re.compile(r'L\.circleMarker\(\s*\[([0-9.]+),\s*([0-9.]+)\]')
-tooltip_pat = re.compile(r'bindTooltip\(\s*`<div>\s*(.*?)\s*</div>`', re.DOTALL)
-coords_raw   = coord_pat.findall(sat_html)
-tooltips_raw = tooltip_pat.findall(sat_html)
-
-name_brand_pat = re.compile(r'(.+?)\s*\((.+?)\)')
-stores = []
-for i, tt in enumerate(tooltips_raw):
-    m = name_brand_pat.match(tt.strip())
-    if not m or i >= len(coords_raw): continue
-    lat, lng = float(coords_raw[i][0]), float(coords_raw[i][1])
-    if not (37.57 <= lat <= 37.73 and 126.74 <= lng <= 126.97): continue
-    stores.append({'name': m.group(1).strip(), 'brand': m.group(2).strip(), 'lat': lat, 'lng': lng})
-
+# ── 1. 데이터 로드 (scripts/extract_data.py, fetch_osm.py, gap_analysis.py 결과) ──
+stores = pd.read_csv(DATA / 'stores.csv').to_dict('records')
 print(f"  편의점 {len(stores)}개")
 
-# ── 2. 행정동 경계 (Overpass API) ─────────────────────────────────────────────
-print("\n행정동 경계 로드 중 (Overpass API)...")
-dong_geojson = None
-try:
-    query = """[out:json][timeout:120];
-area["name"="고양시"]["admin_level"="6"]->.goyang;
-(
-  relation["admin_level"="8"]["boundary"="administrative"](area.goyang);
-);
-out body geom;
-"""
-    r = requests.post("https://overpass-api.de/api/interpreter",
-                      data={'data': query}, timeout=150)
-    r.raise_for_status()
-    osm = r.json()
-
-    # OSM relation → GeoJSON 변환
-    features = []
-    for el in osm.get('elements', []):
-        if el.get('type') != 'relation': continue
-        name = el.get('tags', {}).get('name', '알 수 없음')
-        # outer way 멤버의 geometry로 폴리곤 구성
-        outer_coords = []
-        for member in el.get('members', []):
-            if member.get('role') == 'outer' and 'geometry' in member:
-                ring = [[g['lon'], g['lat']] for g in member['geometry']]
-                if ring: outer_coords.extend(ring)
-        if len(outer_coords) < 3: continue
-        features.append({
-            "type": "Feature",
-            "properties": {"name": name},
-            "geometry": {"type": "Polygon", "coordinates": [outer_coords]}
-        })
-
-    dong_geojson = {"type": "FeatureCollection", "features": features}
-    print(f"  행정동 {len(features)}개 로드 완료")
-except Exception as e:
-    print(f"  Overpass API 실패: {e}\n  (동 경계 없이 진행)")
+# ── 2. 행정동 경계 ────────────────────────────────────────────────────────────
+# ※ 이전 버전은 Overpass outer 웨이 좌표를 순서 없이 이어 붙여 경계선이 꼬였습니다.
+dong_geojson = json.loads((DATA / 'goyang_dong.geojson').read_text(encoding='utf-8'))
+print(f"  행정동 {len(dong_geojson['features'])}개")
 
 # ── 3. 지도 생성 ─────────────────────────────────────────────────────────────
 print("\n지도 생성 중...")
@@ -83,7 +34,13 @@ BRAND_COLOR = {
 }
 DEFAULT_COLOR = '#6b7280'
 
-m = folium.Map(location=[37.655, 126.835], zoom_start=12, tiles='CartoDB dark_matter')
+# CartoDB 타일은 API 키가 없으면 워터마크가 표시되어 Esri 다크 그레이 타일 사용
+m = folium.Map(location=[37.655, 126.835], zoom_start=12, tiles=None)
+folium.TileLayer(
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/'
+          'World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attr='Tiles &copy; Esri', name='Esri Dark Gray', max_zoom=16, control=False,
+).add_to(m)
 
 # ── 3-A. 행정동 경계 레이어 ───────────────────────────────────────────────────
 dong_group = folium.FeatureGroup(name='행정동 경계', show=True)
@@ -106,11 +63,8 @@ if dong_geojson and dong_geojson['features']:
 
     # 동 이름 레이블 (중심점에 DivIcon)
     for feat in dong_geojson['features']:
-        coords = feat['geometry']['coordinates'][0]
-        if not coords: continue
-        lats = [c[1] for c in coords]
-        lngs = [c[0] for c in coords]
-        clat, clng = np.mean(lats), np.mean(lngs)
+        pt = shape(feat['geometry']).representative_point()   # 폴리곤 내부 보장
+        clat, clng = pt.y, pt.x
         name = feat['properties'].get('name', '')
         short = name.replace('행정동', '').replace('제', '')
         folium.Marker(
@@ -153,19 +107,10 @@ marker_group.add_to(m)
 
 folium.LayerControl(collapsed=False).add_to(m)
 
-# ── 4. 커버리지 통계 계산 ────────────────────────────────────────────────────
-# 500m 격자로 커버리지 비율 추정
-grid_lats = np.arange(37.57, 37.73, 0.0045)
-grid_lngs = np.arange(126.74, 126.97, 0.0045)
-grid = [(lat, lng) for lat in grid_lats for lng in grid_lngs]
-store_coords = np.array([[s['lat'], s['lng']] for s in stores])
-from scipy.spatial import cKDTree
-tree = cKDTree(store_coords * [111000, 88000])
-grid_np = np.array(grid) * [111000, 88000]
-dists, _ = tree.query(grid_np)
-covered = (dists <= 400).sum()
-total_pts = len(grid)
-coverage_pct = covered / total_pts * 100
+# ── 4. 커버리지 통계 (scripts/gap_analysis.py 결과) ─────────────────────────────
+# 이전 버전의 28.4%는 위경도 사각형 전체(산·농지·한강 포함) 500m 격자 기준이었습니다.
+summary = json.loads((RESULTS / 'summary.json').read_text(encoding='utf-8'))
+coverage_pct = summary['coverage_residential_pct']
 
 brand_counts = Counter(s['brand'] for s in stores)
 
@@ -181,7 +126,9 @@ legend_html = f"""
 
   <div style="background:rgba(16,217,160,0.1);border:1px solid rgba(16,217,160,0.2);border-radius:8px;padding:12px;margin-bottom:16px">
     <div style="font-size:28px;font-weight:700;color:#10d9a0">{coverage_pct:.1f}%</div>
-    <div style="font-size:11px;color:#64748b;margin-top:2px">격자점 기준 400m 내 커버</div>
+    <div style="font-size:11px;color:#64748b;margin-top:2px">주거지역 기준 400m 내 커버 (100m 격자)</div>
+    <div style="font-size:11px;color:#94a3b8;margin-top:6px">아파트 세대 기준 {summary['coverage_apt_units_pct']}%<br>
+      시 전체 면적 기준 {summary['coverage_city_area_pct']}% · 이전 방식 {summary['coverage_old_method_pct']}%</div>
   </div>
 
   <div style="margin-bottom:16px">
@@ -207,7 +154,7 @@ legend_html += f"""
 
 m.get_root().html.add_child(folium.Element(legend_html))
 
-out = f'{BASE}/goyang_coverage_map.html'
+out = ROOT / 'goyang_coverage_map.html'
 m.save(out)
 print(f"\n[OK] 저장: {out}")
-print(f"  커버리지: {coverage_pct:.1f}% (격자 {total_pts}개 기준 400m 내)")
+print(f"  주거지 커버리지: {coverage_pct:.1f}%")

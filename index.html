@@ -852,13 +852,13 @@ footer {
     </h1>
 
     <p class="hero-subtitle">
-      소상공인 공공데이터 · 공동주택 세대수 · K-means · 보로노이 다이어그램을
+      소상공인 공공데이터 · 공동주택 세대수 · OSM 주거지역 · 2SFCA 접근성 지표를
       결합해 편의점 공백 지역을 탐지하고 신규 입지를 추천합니다
     </p>
 
     <div class="hero-stats">
       <div class="hstat">
-        <span class="hstat-num grad-blue" id="stat-1" data-target="951">0</span>
+        <span class="hstat-num grad-blue" id="stat-1" data-target="921">0</span>
         <span class="hstat-label">편의점</span>
         <div class="hstat-underline" style="color:var(--accent)"></div>
       </div>
@@ -900,8 +900,26 @@ footer {
 <div class="section-bg" id="maps">
   <div class="section reveal">
     <div class="section-label">분석 지도</div>
-    <div class="section-title">8가지 시각화</div>
+    <div class="section-title">9가지 시각화</div>
     <div class="maps-grid">
+
+      <a class="map-card" href="goyang_gap_v2_map.html">
+        <div class="map-thumb">
+          <img src="images/thumb_gap_v2.jpg" alt="공백 재분석 v2" loading="lazy">
+          <div class="map-thumb-bg orange"></div>
+        </div>
+        <div class="map-body">
+          <span class="map-badge" style="background:rgba(255,107,53,0.12);color:#fb923c">NEW · 공백 재분석</span>
+          <div class="map-title">공백 재분석 v2 + 신규 입지 추천</div>
+          <div class="map-desc">고양시 실제 경계·OSM 주거지역 위 100m 격자와 미터 좌표계로 접근성을 다시 계산하고, 2SFCA(수요 대비 공급)로 공백 점수를 매겼습니다. 최대 커버리지 모형으로 신규 입지 TOP 10을 추천합니다.</div>
+          <div class="map-tags">
+            <span class="mtag">2SFCA</span>
+            <span class="mtag">Max Coverage</span>
+            <span class="mtag">EPSG:5179</span>
+          </div>
+          <span class="map-link">지도 열기<div class="map-link-arrow"></div></span>
+        </div>
+      </a>
 
       <a class="map-card" href="goyang_voronoi_map.html">
         <div class="map-thumb">
@@ -911,7 +929,7 @@ footer {
         <div class="map-body">
           <span class="map-badge" style="background:rgba(139,92,246,0.12);color:#a78bfa">공간 분할</span>
           <div class="map-title">보로노이 세대수 분석</div>
-          <div class="map-desc">각 편의점의 담당 구역을 보로노이로 분할하고 구역 내 아파트 세대수를 색상으로 인코딩. 최대 4,320세대 담당 편의점 발견.</div>
+          <div class="map-desc">각 편의점의 담당 구역을 보로노이로 분할하고 구역 내 아파트 세대수를 색상으로 인코딩. (최대 4,320세대 구역은 편의점 3곳이 같은 좌표에 등록돼 하나로 합쳐진 값)</div>
           <div class="map-tags">
             <span class="mtag">Voronoi Diagram</span>
             <span class="mtag">KD-Tree</span>
@@ -928,8 +946,8 @@ footer {
         </div>
         <div class="map-body">
           <span class="map-badge" style="background:rgba(0,194,255,0.1);color:#38bdf8">공백 분석</span>
-          <div class="map-title">공백 지역 분석</div>
-          <div class="map-desc">편의점 간 최근접 거리 기반으로 공백이 심각한 행정동 TOP 10을 도출했습니다.</div>
+          <div class="map-title">공백 지역 분석 (v1)</div>
+          <div class="map-desc">초기 버전: 동 안 편의점끼리의 평균 거리로 TOP 10을 도출했습니다. 주민 기준 거리와 수요를 반영하지 않아 v2 재분석으로 대체했습니다.</div>
           <div class="map-tags">
             <span class="mtag">Grid 500m</span>
             <span class="mtag">Nearest Neighbor</span>
@@ -1001,7 +1019,7 @@ footer {
         <div class="map-body">
           <span class="map-badge" style="background:rgba(16,217,160,0.1);color:#10d9a0">커버리지</span>
           <div class="map-title">서비스 권역 + 행정동 경계</div>
-          <div class="map-desc">각 편의점 반경 400m 서비스 권역과 44개 행정동 경계를 오버레이. 격자 기반 커버리지 28.4% 산출.</div>
+          <div class="map-desc">각 편의점 반경 400m 서비스 권역과 44개 행정동 경계를 오버레이. 주거지역 기준 커버리지 97.9% (이전 사각형 격자 방식 28.4%).</div>
           <div class="map-tags">
             <span class="mtag">Buffer 400m</span>
             <span class="mtag">Overpass API</span>
@@ -1058,59 +1076,53 @@ footer {
   <div class="section-title">분석 결과</div>
   <div class="insights-grid">
 
-    <div class="insight-card reveal reveal-delay-1" style="color:var(--orange)">
-      <div class="insight-num" style="color:var(--orange)">4,320</div>
-      <div class="insight-num-ctx">세대 — 단일 편의점 담당 최대치</div>
+    <div class="insight-card reveal reveal-delay-1" style="color:var(--green)">
+      <div class="insight-num" style="color:var(--green)">97.9%</div>
+      <div class="insight-num-ctx">주거지역 중 편의점 400m(도보 5분) 안에 드는 비율</div>
       <div class="insight-label">
-        <strong>세븐일레븐 일산동구점</strong> 한 곳이 커버하는 아파트 세대수.
-        고양시 편의점 평균 담당 세대(약 275세대)의 <strong>15.7배</strong>에 달해,
-        이 편의점 1개가 인근 모든 수요를 사실상 혼자 감당하고 있습니다.
+        산·농지·한강까지 포함한 사각형 격자로 계산했던 이전 수치(28.4%)와 달리, <strong>사람이 사는 곳</strong>만 보면 고양시는 거의 포화 상태입니다. 아파트 세대 기준으로도 <strong>98.9%</strong>가 400m 안에 편의점이 있습니다.
       </div>
       <div class="insight-footer">
-        <div class="insight-compare">고양시 평균 275세대 대비 <em style="color:var(--orange)">+1,470% 초과</em></div>
+        <div class="insight-compare">이전 방식 28.4% → 주거지 기준 <em style="color:var(--green)">97.9%</em> · 주거지→편의점 평균 150m</div>
+        <div class="insight-bar-row">
+          <div class="insight-bar-wrap">
+            <div class="insight-bar" style="width:98%;background:var(--green)"></div>
+          </div>
+          <span class="insight-badge" style="background:rgba(16,217,160,0.12);color:var(--green)">커버리지</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-card reveal reveal-delay-2" style="color:var(--orange)">
+      <div class="insight-num" style="color:var(--orange)">삼송1동</div>
+      <div class="insight-num-ctx">공백 점수 1위 행정동 (v2)</div>
+      <div class="insight-label">
+        주거지의 <strong>22%</strong>가 편의점 400m 밖에 있습니다. 추천 1위 입지 주변 <strong>힐스테이트 라피아노 삼송</strong>(452세대)은 가장 가까운 편의점까지 약 <strong>700m</strong>입니다.
+      </div>
+      <div class="insight-footer">
+        <div class="insight-compare">주거지 커버율 77.6% · 공백 점수 <em style="color:var(--orange)">18.8 / 100</em></div>
         <div class="insight-bar-row">
           <div class="insight-bar-wrap">
             <div class="insight-bar" style="width:100%;background:var(--orange)"></div>
           </div>
-          <span class="insight-badge" style="background:rgba(255,107,53,0.15);color:var(--orange)">과부하 1위</span>
+          <span class="insight-badge" style="background:rgba(255,107,53,0.15);color:var(--orange)">공백 1위</span>
         </div>
       </div>
     </div>
 
-    <div class="insight-card reveal reveal-delay-2" style="color:var(--accent)">
-      <div class="insight-num" style="color:var(--accent)">탄현2동</div>
-      <div class="insight-num-ctx">고양시 편의점 공급 최하위 행정동</div>
+    <div class="insight-card reveal reveal-delay-3" style="color:var(--accent)">
+      <div class="insight-num" style="color:var(--accent)">1,335</div>
+      <div class="insight-num-ctx">세대 — 탄현2동 편의점 1곳당 아파트 세대수</div>
       <div class="insight-label">
-        44개 행정동 중 편의점이 <strong>5개</strong>로 가장 적습니다.
-        주거 인구 대비 공급이 극단적으로 부족해, 거주민은 가장 가까운 편의점까지
-        평균 <strong>262m(도보 3분 이상)</strong>를 이동해야 합니다.
+        편의점이 5개뿐인 <strong>탄현2동</strong>은 거리상으로는 대부분 400m 안이지만, 도보권 안 편의점 수가 1천 세대당 <strong>0.85개</strong>로 고양시 중앙값(1.92개)의 절반 이하입니다. 거리보다 <strong>수요 대비 공급</strong>이 부족한 사례입니다.
       </div>
       <div class="insight-footer">
-        <div class="insight-compare">편의점 5개 · 평균 최근접 거리 262m · <em style="color:var(--accent)">공급 최저</em></div>
+        <div class="insight-compare">1천 세대당 도보권 편의점 0.85개 vs 중앙값 1.92개 · <em style="color:var(--accent)">공급비 최하위</em></div>
         <div class="insight-bar-row">
           <div class="insight-bar-wrap">
-            <div class="insight-bar" style="width:100%;background:var(--accent)"></div>
+            <div class="insight-bar" style="width:44%;background:var(--accent)"></div>
           </div>
-          <span class="insight-badge" style="background:rgba(0,194,255,0.12);color:var(--accent)">공백 1위</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="insight-card reveal reveal-delay-3" style="color:var(--green)">
-      <div class="insight-num" style="color:var(--green)">473m</div>
-      <div class="insight-num-ctx">능곡동 편의점 간 평균 최근접 거리</div>
-      <div class="insight-label">
-        <strong>능곡동</strong>은 편의점이 13개나 있지만, 넓은 면적에 뿔뿔이 흩어져 있습니다.
-        고양시 행정동 평균(230m)의 <strong>2.1배</strong> 수준으로,
-        편의점 수가 아닌 배치 간격이 문제인 대표 사례입니다.
-      </div>
-      <div class="insight-footer">
-        <div class="insight-compare">고양시 행정동 평균 230m 대비 <em style="color:var(--green)">+106%</em></div>
-        <div class="insight-bar-row">
-          <div class="insight-bar-wrap">
-            <div class="insight-bar" style="width:79%;background:var(--green)"></div>
-          </div>
-          <span class="insight-badge" style="background:rgba(16,217,160,0.12);color:var(--green)">분산도 1위</span>
+          <span class="insight-badge" style="background:rgba(0,194,255,0.12);color:var(--accent)">수요 대비 공급</span>
         </div>
       </div>
     </div>
@@ -1134,21 +1146,20 @@ footer {
       </div>
     </div>
 
+
     <div class="insight-card reveal reveal-delay-2" style="color:#38bdf8">
-      <div class="insight-num" style="color:#38bdf8">50,370</div>
-      <div class="insight-num-ctx">수요압력 1위 클러스터 영향 세대수</div>
+      <div class="insight-num" style="color:#38bdf8">3,219</div>
+      <div class="insight-num-ctx">세대 — 추천 2위 입지(식사동 위시티) 반경 400m 안 세대수</div>
       <div class="insight-label">
-        K-means 클러스터링으로 도출한 <strong>신규 입점 최우선 추천 구역</strong>.
-        세대수 ÷ 담당면적 가중 점수가 가장 높아, 편의점 1개 입점 시
-        약 <strong>5만 세대</strong>의 수요를 흡수할 수 있습니다.
+        <strong>위시티일산자이 1·2단지</strong> 일대는 세대수가 많지만 최근접 편의점이 386m로 도보권 경계에 걸쳐 있습니다. 이 자리에 1곳이 생기면 고양시 기준 공급률로 <strong>약 520세대</strong>분의 부족이 해소됩니다.
       </div>
       <div class="insight-footer">
-        <div class="insight-compare">K-means 10개 클러스터 중 <em style="color:#38bdf8">압도적 1위</em></div>
+        <div class="insight-compare">최대 커버리지 모형 추천 2위 · <em style="color:#38bdf8">식사동</em></div>
         <div class="insight-bar-row">
           <div class="insight-bar-wrap">
-            <div class="insight-bar" style="width:100%;background:#38bdf8"></div>
+            <div class="insight-bar" style="width:64%;background:#38bdf8"></div>
           </div>
-          <span class="insight-badge" style="background:rgba(56,189,248,0.12);color:#38bdf8">수요압력 1위</span>
+          <span class="insight-badge" style="background:rgba(56,189,248,0.12);color:#38bdf8">추천 입지</span>
         </div>
       </div>
     </div>
@@ -1202,11 +1213,11 @@ footer {
         </div>
         <div class="pipe-content">
           <div class="pipe-title">공백 분석</div>
-          <div class="pipe-detail">고양시 전역을 <strong>500m 격자</strong>로 분할 후 각 격자점에서 최근접 편의점까지 거리 계산. 행정동별 평균 최근접 거리로 공백 심각도 점수화 → TOP 10 행정동 도출.</div>
+          <div class="pipe-detail">고양시 실제 경계와 OSM 주거지역 위에 <strong>100m 격자</strong>를 깔고, EPSG:5179(미터 좌표계)로 최근접 편의점 거리를 계산. <strong>2SFCA</strong>로 아파트별 "도보권 편의점 수 / 1천 세대"를 구해, 공급 부족 세대와 400m 밖 주거지를 합친 공백 점수로 행정동 순위 도출. 최대 커버리지 모형(탐욕법)으로 신규 입지 TOP 10 추천.</div>
           <div class="pipe-tags">
-            <span class="pipe-tag">numpy Grid</span>
-            <span class="pipe-tag">scipy cKDTree</span>
-            <span class="pipe-tag">행정동 집계</span>
+            <span class="pipe-tag">pyproj</span>
+            <span class="pipe-tag">2SFCA</span>
+            <span class="pipe-tag">Max Coverage</span>
           </div>
         </div>
       </div>
@@ -1251,7 +1262,7 @@ footer {
         </div>
         <div class="pipe-content">
           <div class="pipe-title">서비스 권역 · 브랜드 공백 분석</div>
-          <div class="pipe-detail">각 편의점 반경 <strong>400m 서비스 원</strong> 시각화 및 격자 기반 커버리지 산출(28.4%). Overpass API로 44개 행정동 GeoJSON 취득. 브랜드별 최근접 거리 히트맵으로 CU·GS25·세븐일레븐·이마트24 각 브랜드 사각지대 분석.</div>
+          <div class="pipe-detail">각 편의점 반경 <strong>400m 서비스 원</strong> 시각화 및 주거지역 기준 커버리지 산출(97.9%). Overpass API로 44개 행정동 경계를 받아 Shapely polygonize로 조립. 브랜드별 최근접 거리 히트맵으로 CU·GS25·세븐일레븐·이마트24 각 브랜드 사각지대 분석.</div>
           <div class="pipe-tags">
             <span class="pipe-tag">Buffer 400m</span>
             <span class="pipe-tag">Overpass API</span>
@@ -1285,7 +1296,7 @@ footer {
         </div>
         <div class="pipe-content">
           <div class="pipe-title">시각화 및 배포</div>
-          <div class="pipe-detail">Folium 기반 인터랙티브 지도 <strong>8종</strong> 제작. Playwright(Chromium 헤드리스)로 각 지도 스크린샷 썸네일 자동 생성. GitHub Pages로 정적 웹사이트 배포.</div>
+          <div class="pipe-detail">Folium 기반 인터랙티브 지도 <strong>9종</strong> 제작. Playwright(Chromium 헤드리스)로 각 지도 스크린샷 썸네일 자동 생성. GitHub Pages로 정적 웹사이트 배포.</div>
           <div class="pipe-tags">
             <span class="pipe-tag">Folium</span>
             <span class="pipe-tag">Leaflet.js</span>

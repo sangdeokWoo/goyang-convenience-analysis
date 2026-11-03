@@ -84,7 +84,7 @@ for brand, dists in brand_data.items():
 # ── 4. 지도 생성 ─────────────────────────────────────────────────────────────
 print("\n지도 생성 중...")
 
-m = folium.Map(location=[37.655, 126.835], zoom_start=12, tiles='CartoDB dark_matter')
+m = folium.Map(location=[37.655, 126.835], zoom_start=12, tiles='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', attr='Tiles &copy; Esri')
 
 # 브랜드별 히트맵 레이어 — 흰색 없이 채도 높은 색으로만 구성
 GRADIENTS = {

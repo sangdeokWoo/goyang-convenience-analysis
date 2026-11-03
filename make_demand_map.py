@@ -111,7 +111,7 @@ print(centroids[['rank','lat','lng','total_units','avg_dist','apt_count','score'
 m = folium.Map(
     location=[37.655, 126.835],
     zoom_start=12,
-    tiles='CartoDB dark_matter',
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', attr='Tiles &copy; Esri',
 )
 
 # 히트맵 레이어
