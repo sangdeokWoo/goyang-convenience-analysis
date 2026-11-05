@@ -16,7 +16,7 @@ from shapely.geometry import shape
 ROOT = Path(__file__).resolve().parent.parent
 DATA, RESULTS = ROOT / 'data', ROOT / 'results'
 
-# ── 1. 데이터 로드 (scripts/extract_data.py, fetch_osm.py, gap_analysis.py 결과) ──
+# ── 1. 데이터 로드 (data/*.csv, fetch_osm.py, gap_analysis.py 결과) ──
 stores = pd.read_csv(DATA / 'stores.csv').to_dict('records')
 print(f"  편의점 {len(stores)}개")
 

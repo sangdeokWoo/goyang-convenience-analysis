@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / 'data'
 TO_M = Transformer.from_crs(4326, 5179, always_xy=True)
 
-# ── 1. 데이터 로드 (scripts/extract_data.py, scripts/fetch_osm.py 결과) ────────
+# ── 1. 데이터 로드 (data/*.csv, scripts/fetch_osm.py 결과) ────────
 stores = pd.read_csv(DATA / 'stores.csv').to_dict('records')
 dong_geojson = json.loads((DATA / 'goyang_dong.geojson').read_text(encoding='utf-8'))
 features = dong_geojson['features']

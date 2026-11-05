@@ -17,6 +17,9 @@
   "stores_per_1k_units_median": 1.92,
   "short_units": 45865,
   "uncovered_res_km2": 0.31,
-  "after_sites_short_units": 42820,
-  "after_sites_uncovered_res_km2": 0.0
+  "after_sites_short_units": 41346,
+  "after_sites_uncovered_res_km2": 0.31,
+  "min_store_dist_m": 200,
+  "store_capture_median_units": 313,
+  "stores_without_apt_demand": 266
 }

@@ -7,7 +7,7 @@
   - 400m 밖 주거지 격자 (빨간 사각형)
   - 아파트 단지 (원 크기 = 세대수, 색 = 1천 세대당 도보권 편의점 수)
   - 기존 편의점
-  - 신규 입지 추천 TOP 10 (번호 + 400m 반경)
+  - 신규 입지 후보 TOP 10 (번호 + 400m 반경, 툴팁: 기대 배후 세대)
 
 실행: python scripts/gap_analysis.py && python scripts/make_gap_v2_map.py
 """
@@ -80,7 +80,7 @@ def main():
                     'short', 'unc', 'data'],
             aliases=['행정동', '구', '공백 순위', '공백 점수', '편의점', '아파트 세대(300+)',
                      '편의점 1곳당 세대', '1천 세대당 도보권 편의점', '주거지 400m 커버율',
-                     '공급 부족 세대', '400m 밖 주거지', '데이터 수집 범위'],
+                     '중앙값 미달 세대', '400m 밖 주거지', '데이터 수집 범위'],
             style=TT_STYLE),
     ).add_to(m)
     cmap.add_to(m)
@@ -132,11 +132,11 @@ def main():
     g_apt.add_to(m)
 
     # ── 추천 입지 ─────────────────────────────────────────────────────────────
-    g_site = folium.FeatureGroup(name='신규 입지 추천 TOP 10', show=True)
+    g_site = folium.FeatureGroup(name='신규 입지 후보 TOP 10', show=True)
     for s in sites.itertuples():
         folium.Circle([s.lat, s.lng], radius=RADIUS, color='#38bdf8', weight=1.5,
                       dash_array='5 5', fill=True, fill_opacity=0.06).add_to(g_site)
-        apts_txt = s.nearby_apts if isinstance(s.nearby_apts, str) and s.nearby_apts else '아파트 외 주거지'
+        border_txt = f'<br>시 경계 {s.city_border_m:,}m: 시 밖 편의점 미반영' if s.near_city_border else ''
         folium.Marker(
             [s.lat, s.lng],
             icon=folium.DivIcon(html=(
@@ -145,9 +145,9 @@ def main():
                 f'justify-content:center;border:2px solid #fff;transform:translate(-13px,-13px)">'
                 f'{s.rank}</div>')),
             tooltip=(f'<b>추천 #{s.rank}</b> {s.gu} {s.dong}<br>'
-                     f'최근접 기존 편의점 {s.nearest_store_m:,}m<br>'
-                     f'공급 부족 해소 {s.short_units_reduced:,}세대 · 새로 커버하는 주거지 {s.new_covered_res_km2}km²<br>'
-                     f'주변: {apts_txt}<br>'
+                     f'기대 배후 {s.capture_units:,}세대 (기존 점포 대비 {s.capture_pctile}백분위)<br>'
+                     f'새로 도보권 {s.new_walkable_units:,}세대 · 최근접 기존 편의점 {s.nearest_store_m:,}m<br>'
+                     f'주변: {s.nearby_apts}{border_txt}<br>'
                      f'<a href="https://map.kakao.com/link/map/추천{s.rank},{s.lat},{s.lng}" target="_blank">카카오맵</a>'),
         ).add_to(g_site)
     g_site.add_to(m)
@@ -182,8 +182,9 @@ def main():
   <div style="font-size:10px;color:#fbbf24;letter-spacing:1px;margin-bottom:4px">공백 점수 TOP 5</div>
   {top5}
   <div style="border-top:1px solid rgba(255,255,255,0.08);margin-top:8px;padding-top:8px;color:#94a3b8;font-size:11px">
-    공백 점수 = 50 × 공급 부족 세대 비중(2SFCA) + 50 × 400m 밖 주거지 비중<br>
-    기존 방식 28.4%는 산·농지·한강까지 포함한 사각형 격자 기준이었습니다.<br>
+    공백 점수 = 50 × 중앙값 미달 세대 비중(2SFCA) + 50 × 400m 밖 주거지 비중<br>
+    추천 입지 = 기대 배후 세대 최대, 기존 점포에서 {summary['min_store_dist_m']}m 이상.
+    현장 확인 전 후보입니다.<br>
     <span style="color:#ef4444">■</span> 400m 밖 주거지 &nbsp;
     <span style="color:#38bdf8">●</span> 추천 입지 &nbsp;
     <span style="color:#64748b">▨</span> 데이터 범위 밖
